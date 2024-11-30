@@ -5,3 +5,13 @@ CMakeFiles
 cmake_install.cmake
 CMakeCache.txt
 Makefile
+
+log/
+client
+server
+database.txt
+
+.ccls-cache
+.cache
+
+compile_commands.json
