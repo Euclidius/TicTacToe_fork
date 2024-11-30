@@ -20,7 +20,7 @@ long long encrypt(const std::string& s) {
     h = (h + m * symbol) % mod;
     m = ((m % mod) * (alphabet_size % mod)) % mod;
   }
-  return h;//static_cast<int>(sin(h) * cos(h) + 1.0 * accuracy) % M_2;
+  return h;
 }
 
 #endif //__SM__ENCRYPTOR__

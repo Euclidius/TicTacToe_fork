@@ -15,8 +15,7 @@ DB::DB(const std::string& filename) : db_filename(filename) {
         }
         catch (...) {
             logger.log("Can not create database file");
-            logger.log("Exit");
-            exit(0);
+            std::cout << "Can not create database file" << std::endl;
         }
     }
 
@@ -38,20 +37,7 @@ DB::DB(const std::string& filename) : db_filename(filename) {
 }
 
 DB::~DB() {
-    std::ofstream db(db_filename);
-    if (!db) {
-        logger.log("Can not open ", db_filename);
-        std::cout << "Can not open " << db_filename << "\n" \
-                     "All registration records created during this session cannot be saved.";
-        logger.log("Exit");
-        exit(0);
-    }
-    for (const auto& [user, password] : users) {
-        db << user << " " << password << '\n';
-    }
-    db.close();
-    logger.log("Written to database");
-    //log_output_stream.close();
+    save();
 }
 
 bool DB::add_record(const std::string& username, long long hash) {
