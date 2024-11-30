@@ -273,10 +273,18 @@ void stream_incoming_messages(DB &db, int move_time, int socket) {
     }
 }
 
-int main() {
+int main(int argc, char** argv) {
+    std::string config_file;
+
+    if (argc < 2) {
+        std::cerr << "Usage: " + std::string(argv[0]) + "<path/to/config_file";
+        return 1;
+    } else {
+        config_file = argv[1];
+    }
     try {
         /* Чтение конфигурационного файла */
-        mINI::INIFile file("server.ini");
+        mINI::INIFile file(config_file);
         mINI::INIStructure ini;
         file.read(ini);
         std::string &address = ini["game"]["move_time"];
