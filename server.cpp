@@ -277,7 +277,7 @@ int main(int argc, char** argv) {
     std::string config_file;
 
     if (argc < 2) {
-        std::cerr << "Usage: " + std::string(argv[0]) + "<path/to/config_file";
+        std::cerr << "Usage: " + std::string(argv[0]) + " <path/to/config_file>";
         return 1;
     } else {
         config_file = argv[1];
