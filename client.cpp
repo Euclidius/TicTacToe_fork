@@ -433,6 +433,10 @@ int main(int argc, char** argv) {
         mINI::INIStructure ini;
         file.read(ini);
         std::string &address = ini["info"]["server"];
+        std::string &log_file = ini["info"]["log_file"];
+        if (!log_file.empty()) {
+            logger.set_log_file(log_file);
+        }
         if (address.empty()) {
             std::cout << "client.ini: [info][server] empty/doesn't exist" << std::endl;
             return 0;

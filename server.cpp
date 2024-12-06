@@ -288,6 +288,12 @@ int main(int argc, char** argv) {
         mINI::INIStructure ini;
         file.read(ini);
         std::string &address = ini["game"]["move_time"];
+        std::string &log_file = ini["info"]["log_file"];
+
+        if (!log_file.empty()) {
+            logger.set_log_file(log_file);
+        }
+
         int move_time = std::stoi(address);
 
         DB db(ini["game"]["database_file"]);
