@@ -417,7 +417,7 @@ int main(int argc, char** argv) {
     std::string config_file;
 
     if (argc < 2) {
-        std::cerr << "Usage: " + std::string(argv[0]) + "<path/to/config_file";
+        std::cerr << "Usage: " + std::string(argv[0]) + " <path/to/config_file>";
         return 1;
     } else {
         config_file = argv[1];
@@ -476,6 +476,24 @@ int main(int argc, char** argv) {
         // Start the thread to handle server responses
         std::thread response_handler(handle_server_responses, sockfd, servaddr);
         std::thread message_processor(process_messages, sockfd, servaddr);
+
+        std::string &login = ini["player"]["login"];
+        std::string &password = ini["player"]["password"];
+        client_configuration.username = login;
+        if (!login.empty() && !password.empty()) {
+            logger.log("Sign in by file");
+
+            std::string query_for_server = "SIGNUP " + client_configuration.username + " " + std::to_string(encrypt(password));
+            send_to_server(sockfd, servaddr, query_for_server);
+
+            query_for_server.clear();
+
+            /* query_for_server = "SIGNIN " + client_configuration.username + " " + std::to_string(encrypt(password)); */
+            /* send_to_server(sockfd, servaddr, query_for_server); */
+            logger.log("Successfully signed up by a file");
+
+            disable_menu = true;
+        }
 
         if (!disable_menu) {
             menu(sockfd, servaddr);
