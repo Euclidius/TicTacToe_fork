@@ -55,6 +55,11 @@ public:
         }
     }
 
+    void set_log_file(const std::string& streamfile_filename) {
+        log_stream_.close();
+        log_stream_ = std::ofstream(create_file(streamfile_filename));
+    }
+
     template<typename T>
     void log_base(T value) {
         log_stream_ << value;
