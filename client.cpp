@@ -156,6 +156,9 @@ std::variant<int, std::pair<int, int>> input(int flag) {
         }
         return x;
     }
+    else {
+        exit(1);
+    }
 }
 
 
@@ -425,11 +428,11 @@ int main(int argc, char** argv) {
 
     try {
         /* Чтение конфигурационного файла */
-        if (!std::filesystem::exists("client.ini")) {
-            std::cout << "client.ini does not exist" << std::endl;
+        if (!std::filesystem::exists(config_file)) {
+            std::cout << config_file <<  " file does not exist" << std::endl;
             return 0;
         }
-        mINI::INIFile file("client.ini");
+        mINI::INIFile file(config_file);
         mINI::INIStructure ini;
         file.read(ini);
         std::string &address = ini["info"]["server"];
@@ -438,7 +441,7 @@ int main(int argc, char** argv) {
             logger.set_log_file(log_file);
         }
         if (address.empty()) {
-            std::cout << "client.ini: [info][server] empty/doesn't exist" << std::endl;
+            std::cout << config_file << ": [info][server] empty/doesn't exist" << std::endl;
             return 0;
         }
         int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -477,23 +480,6 @@ int main(int argc, char** argv) {
         std::thread response_handler(handle_server_responses, sockfd, servaddr);
         std::thread message_processor(process_messages, sockfd, servaddr);
 
-        std::string &login = ini["player"]["login"];
-        std::string &password = ini["player"]["password"];
-        client_configuration.username = login;
-        if (!login.empty() && !password.empty()) {
-            logger.log("Sign in by file");
-
-            std::string query_for_server = "SIGNUP " + client_configuration.username + " " + std::to_string(encrypt(password));
-            send_to_server(sockfd, servaddr, query_for_server);
-
-            query_for_server.clear();
-
-            /* query_for_server = "SIGNIN " + client_configuration.username + " " + std::to_string(encrypt(password)); */
-            /* send_to_server(sockfd, servaddr, query_for_server); */
-            logger.log("Successfully signed up by a file");
-
-            disable_menu = true;
-        }
 
         if (!disable_menu) {
             menu(sockfd, servaddr);
